@@ -1,0 +1,30 @@
+body {
+  position: relative;
+  background-color: #30384b;
+}
+main {
+  /* position: absolute; */
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #a5bdaee1;
+  padding-top: 2em;
+  text-align: center;
+  margin: 4em auto;
+  max-width: 60%;
+  max-height: 100%;
+}
+.heading {
+  margin-top: 4em;
+  color: #19ff6a;
+  text-align: center;
+}
+.timer {
+  text-align: center;
+}
+.footer {
+  margin: 7em 0em auto;
+  text-align: center;
+  color: #a5bdaee1;
+  font-family: 'Times New Roman', Times, serif;
+}
