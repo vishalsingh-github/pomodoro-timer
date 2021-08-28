@@ -45,7 +45,10 @@ function App() {
   const [sessionOver, setSessionOver] = useState(
     new Audio("./SessionOver.mp3")
     );
-    const [sessionCount, setSessionCount] = useState(0)
+    const [sessionCount, setSessionCount] = useState(() => {
+      const temp = JSON.parse(localStorage.getItem("sessionCount"));
+      return temp || 0;
+    })
 
   const Sessionsound = () => {
     sessionOver.currentTime = 0;
@@ -57,6 +60,7 @@ function App() {
     breakOver.play();
   };
   useEffect(() => {
+    localStorage.setItem("sessionCount", JSON.stringify(sessionCount));
     if (displaytimer === 0 && onBreak) {
       Sessionsound();
       setDisplayTimer(breaktime);
@@ -192,9 +196,11 @@ function App() {
               fontSize="large"
               onClick={() => {
                 if (displaytimer === sessiontime) {
+                  localStorage.clear();
+                  setSessionCount(0);
                   return;
                 }
-                setSessionCount(0)
+                setSessionCount(0);
                 resetTime();
                 clearInterval(localStorage.getItem("iterval-id"));
                 onBreak
@@ -223,7 +229,7 @@ function App() {
         </Button>
       </div>
       <footer className="footer">
-        <h5>Author : Vishal Singh</h5>
+        <h4>Author : Vishal Singh</h4>
       </footer>
     </>
   );
