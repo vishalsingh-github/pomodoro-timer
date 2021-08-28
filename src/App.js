@@ -1,8 +1,11 @@
-import { Button, Card, CardActionArea, makeStyles } from "@material-ui/core";
+import { Badge, Button, Card, CardActionArea, makeStyles } from "@material-ui/core";
 import {
   ArrowDownward,
   ArrowUpward,
   Cached,
+  Check,
+  CheckCircle,
+  DoneOutline,
   Pause,
   PlayArrow,
 } from "@material-ui/icons";
@@ -15,11 +18,20 @@ const useStyles = makeStyles({
     margin: "Auto",
     backgroundColor: "#19ed6a",
   },
+  card2: {
+    fontWeight: "bold",
+    width: "11em",
+    margin: "Auto",
+    backgroundColor: "#19ed6a",
+  },
   item: {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
   },
+  btn: {
+    margin: "1em"
+  }
 });
 
 function App() {
@@ -32,7 +44,8 @@ function App() {
   const [breakOver, setBreakOver] = useState(new Audio("./BreakOver.mp3"));
   const [sessionOver, setSessionOver] = useState(
     new Audio("./SessionOver.mp3")
-  );
+    );
+    const [sessionCount, setSessionCount] = useState(0)
 
   const Sessionsound = () => {
     sessionOver.currentTime = 0;
@@ -48,13 +61,15 @@ function App() {
       Sessionsound();
       setDisplayTimer(breaktime);
       setOnBreak(!onBreak);
+      console.log(`count: ${sessionCount}`)
+      setSessionCount(sessionCount + 1)
     }
     if (displaytimer === 0 && !onBreak) {
       Breaksound();
       setDisplayTimer(sessiontime);
       setOnBreak(!onBreak);
     }
-    console.log(displaytimer);
+    // console.log(displaytimer);
   }, [displaytimer, onBreak]);
 
   const formatTime = (time) => {
@@ -119,22 +134,34 @@ function App() {
         <h2>POMODORO TIMER</h2>
       </div>
       <main>
-        <Length
-          title={"Break Length"}
-          changetime={changeTime}
-          type={"break"}
-          time={breaktime}
-          formattime={formatTime}
-        />
-        <Length
-          title={"Session Length"}
-          changetime={changeTime}
-          type={"session"}
-          time={sessiontime}
-          formattime={formatTime}
-        />
+        <Card className={classes.card2}>
+          <CardActionArea>
+            <Length
+              title={"Break Length"}
+              changetime={changeTime}
+              type={"break"}
+              time={breaktime}
+              formattime={formatTime}
+            />
+          </CardActionArea>
+        </Card>
+        <br />
+        <Card className={classes.card2}>
+          <CardActionArea>
+            <Length
+              title={"Session Length"}
+              changetime={changeTime}
+              type={"session"}
+              time={sessiontime}
+              formattime={formatTime}
+            />
+          </CardActionArea>
+        </Card>
+        <br />
+        {sessionCount? <Badge badgeContent={sessionCount} color="secondary">
+          <DoneOutline style={{ color: "#19ff6a" }} fontSize="medium" />
+        </Badge> : <h2></h2>}
       </main>
-
       <Card className={classes.card}>
         <CardActionArea>
           <div className="timer">
@@ -167,6 +194,7 @@ function App() {
                 if (displaytimer === sessiontime) {
                   return;
                 }
+                setSessionCount(0)
                 resetTime();
                 clearInterval(localStorage.getItem("iterval-id"));
                 onBreak
@@ -174,7 +202,7 @@ function App() {
                   : setOnBreak(!onBreak) && controlTime();
                 setTimerOn(!timerOn);
                 setOnBreak(true);
-                timerOn ? setTimerOn(!timerOn) : setTimerOn(timerOn); 
+                timerOn ? setTimerOn(!timerOn) : setTimerOn(timerOn);
               }}
             />
           </div>
@@ -182,6 +210,7 @@ function App() {
       </Card>
       <div>
         <Button
+          className={classes.btn}
           variant="contained"
           color="secondary"
           onClick={() => {
